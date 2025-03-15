@@ -22,20 +22,20 @@ app.get("/", async (req, res) => {
 	try {
 
 		const queryPathStats = await fs.stat(queryPath)
-		if (queryPathStats.isFile()) {
-			// send file
-			res.sendFile(queryPath)
-		} else if (queryPathStats.isDirectory()) {
+		if (queryPathStats.isDirectory()) {
 			// send dirItems
 			const dirItems = await getDirItems(queryPath)
 			console.log("SENDING", dirItems)
 			res.json(dirItems)
+		} else if (queryPathStats.isFile()) {
+			// send file
+			res.sendFile(queryPath)
 		} else {
 			throw new Error("MY ERROR: NOT A FILE OR DIR")
 		}
 	} catch (err) {
 		console.warn("MY ERROR", err)
-		res.status(400).send(err)
+		res.status(400).json({ error: `${err}` })
 	}
 })
 
@@ -54,6 +54,7 @@ async function getDirItems(queryPath: string) {
 		} else {
 			throw new Error("MY ERROR: NOT A FILE OR DIR")
 		}
+
 		return { itemName, fullPath, type } as DirItem
 	})
 	return Promise.all(dirItemPromises)
