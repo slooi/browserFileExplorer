@@ -1,0 +1,23 @@
+:root,
+html,
+body,
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* .clickable {
+  color: rgb(0, 0, 83);
+  display: block;
+  width: fit-content;
+  background-color: yellow;
+  border-bottom: 1px solid transparent;
+}
+
+.clickable:hover {
+  cursor: pointer;
+  color: rgb(50, 50, 255);
+  border-bottom: 1px solid rgb(50, 50, 255);
+  display: block;
+} */
