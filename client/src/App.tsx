@@ -33,17 +33,19 @@ function App() {
 
   return (
     <>
-      <h1>asd</h1>
-      <ul>
-        {data && data.map(item => (
-          <li
+      <h1>File Navigator</h1>
+      <ul style={{ display: 'flex', flexDirection: 'column', alignItems: "flex-start" }}>
+        {data && data.map(item => {
+          if (item.type === "dir") return <li
             key={item.itemName}
             className={"clickable"}
             onClick={() => handleClick(item)}
           >
             <a href="#">{item.itemName}</a>
           </li>
-        ))}
+          if (item.type === "file") return <img loading="lazy" src={"/api" + item.publicPath} />
+        }
+        )}
       </ul>
     </>
   )

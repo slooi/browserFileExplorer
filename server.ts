@@ -1,14 +1,17 @@
 import express from "express"
 import fs from "fs/promises"
-import path from "path"
 import { DirItem } from "./client/src/types"
+import dotenv from "dotenv"
+
 const PORT = 7005
+dotenv.config()
 const app = express()
 
 
-const DEFAULT_PATH = path.resolve("C:/Users/Sam/Downloads/dl/gallery-dl/")
+const DEFAULT_PATH = process.env.DEFAULT_PATH || "/";
+console.log("DEFAULT_PATH", DEFAULT_PATH)
 
-// app.use(express.static(DEFAULT_PATH))
+app.use("/public", express.static(DEFAULT_PATH))
 
 app.use("/", (req, res, next) => {
 	console.log("path hit:", req.path)
@@ -29,13 +32,14 @@ app.get("/", async (req, res) => {
 			res.json(dirItems)
 		} else if (queryPathStats.isFile()) {
 			// send file
-			res.sendFile(queryPath)
+			// res.sendFile(queryPath)
+			throw new Error("MY UNEXPECTED: THIS SHOULDN'T BE HAPPENING")
 		} else {
 			throw new Error("MY ERROR: NOT A FILE OR DIR")
 		}
 	} catch (err) {
-		console.warn("MY ERROR", err)
 		res.status(400).json({ error: `${err}` })
+		throw err
 	}
 })
 
@@ -43,7 +47,7 @@ async function getDirItems(queryPath: string) {
 	const dirContent = await fs.readdir(queryPath)
 
 	const dirItemPromises = dirContent.map(async itemName => {
-		const fullPath = path.join(queryPath, itemName)
+		const fullPath = queryPath + "/" + itemName
 
 		const stats = await fs.stat(fullPath)
 		let type: "file" | "dir";
@@ -55,7 +59,10 @@ async function getDirItems(queryPath: string) {
 			throw new Error("MY ERROR: NOT A FILE OR DIR")
 		}
 
-		return { itemName, fullPath, type } as DirItem
+
+		const publicPath = "/public" + fullPath.replace(DEFAULT_PATH, "")
+		console.log("\n\nrelativePath\n", publicPath, "\n", fullPath)
+		return { itemName, fullPath, publicPath, type } as DirItem
 	})
 	return Promise.all(dirItemPromises)
 }
