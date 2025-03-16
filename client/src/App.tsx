@@ -27,7 +27,13 @@ function App() {
           >
             <a href={encodeURIComponent(item.publicPath)} onClick={() => { }}>{item.itemName}</a>
           </li>
-          if (item.type === "file") return <img style={{ maxWidth: "100%" }} src={"/api/" + encodeURIComponent(item.publicPath)} />
+          if (item.type === "file") return <img src={"/api/" + encodeURIComponent(item.publicPath)}
+            onLoad={(e) => {
+              const img = e.target as HTMLImageElement;
+              const parent = img.parentElement
+              if (parent === null) throw new Error("ERROR PARENT NULL")
+              img.style.width = `${parent.clientWidth}px`; // Set width to current 100% width in pixels
+            }} />
         }
         )}
       </ul>
