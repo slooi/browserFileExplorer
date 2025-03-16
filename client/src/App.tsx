@@ -28,6 +28,7 @@ function App() {
             <a href={encodeURIComponent(item.publicPath)} onClick={() => { }}>{item.itemName}</a>
           </li>
           if (item.type === "file") return <img src={"/api/" + encodeURIComponent(item.publicPath)}
+            style={{ width: "100%" }}
             onLoad={(e) => {
               const img = e.target as HTMLImageElement;
               const parent = img.parentElement
