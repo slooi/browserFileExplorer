@@ -7,10 +7,6 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        rewrite: (path) => {
-          console.log(path)
-          return path.replace(/^\/api/, '')
-        },
         changeOrigin: true,
         target: "http://localhost:7005/",
       }

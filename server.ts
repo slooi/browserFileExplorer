@@ -7,11 +7,18 @@ const PORT = 7005
 dotenv.config()
 const app = express()
 
+/* 
+NOTES
+- relativePath: this is used by the client to get resources. AbsolutePath is NOT used here as client should only be able to get resources relative to the DEFAULT_PATH
+- absolutePath: this is used only for the server. It allows it to read directories. It's just DEFAULT_PATH + relativePath
+
+
+RULES:
+- paths coming in are stripped of their trailing "/" if they have any. Make sure to add "/" back in if need. (Stripping is default, instead of adding "/" as some paths are files not folders)
+*/
 
 const DEFAULT_PATH = process.env.DEFAULT_PATH || "/";
 console.log("DEFAULT_PATH", DEFAULT_PATH)
-
-// app.use("/public", express.static(DEFAULT_PATH))
 
 app.use("/", (req, res, next) => {
 	console.log("path hit:", decodeURIComponent(req.path))
@@ -21,17 +28,22 @@ app.use("/", (req, res, next) => {
 
 app.get("/favicon.ico", (req, res) => { res.sendStatus(404) })
 
-app.get("/*", async (req, res) => {
-	const relativePath = decodeURIComponent(req.path)
-	const absolutePath = relativePath === "/" ? DEFAULT_PATH : DEFAULT_PATH + relativePath
+app.get("/api/:queryPath(*)", async (req, res) => {
+	console.log("req.params.queryPath", req.params.queryPath)
 
-	console.log("absolutePath", absolutePath)
+	console.log("\n\t\t ### NEW REQUEST ###")
+	const relativePath = decodeURIComponent(req.params.queryPath)
+	const absolutePath = DEFAULT_PATH + relativePath.replace(/$\//, "")
+
+	console.log("# relativePath:", relativePath, "\tabsolutePath:", absolutePath)
 	try {
+		console.log("$$$$$$$$$wai")
 		const pathStats = await fs.stat(absolutePath)
+		console.log(" %%%%%%%%%%%wai 2")
 		if (pathStats.isDirectory()) {
 			// If path user is requesting for is a DIRECTORY
 			const dirItems = await getDirItems(absolutePath)
-			console.log("SENDING DIRECTORY ITEMS:\n", dirItems)
+			// console.log("SENDING DIRECTORY ITEMS:\n", dirItems)
 			res.json(dirItems)
 		} else if (pathStats.isFile()) {
 			// If path user is requesting for is a FILE
@@ -45,13 +57,13 @@ app.get("/*", async (req, res) => {
 	}
 })
 
-async function getDirItems(queryPath: string) {
-	const dirContent = await fs.readdir(queryPath)
+async function getDirItems(dirAbsolutePath: string) {
+	const dirContent = await fs.readdir(dirAbsolutePath)
 
 	const dirItemPromises = dirContent.map(async itemName => {
-		const fullPath = queryPath + "/" + itemName
+		const itemFullPath = dirAbsolutePath + "/" + itemName
 
-		const stats = await fs.stat(fullPath)
+		const stats = await fs.stat(itemFullPath)
 		let type: "file" | "dir";
 		if (stats.isFile()) {
 			type = "file";
@@ -61,9 +73,9 @@ async function getDirItems(queryPath: string) {
 			throw new Error("MY ERROR: NOT A FILE OR DIR")
 		}
 
-		const publicPath = fullPath.replace(DEFAULT_PATH, "")
-		console.log("\n\nrelativePath\n", publicPath, "\n", fullPath)
-		return { itemName, fullPath, publicPath, type } as DirItem
+		const publicPath = itemFullPath.replace(DEFAULT_PATH, "")
+		// console.log("publicPath \t", publicPath, "\t", "DEFAULT_PATH\t", DEFAULT_PATH, "\n\nitemFullPath\t", itemFullPath, "itemName\t", itemName, "dirAbsolutePath", dirAbsolutePath)
+		return { itemName, publicPath, type } as DirItem
 	})
 	return Promise.all(dirItemPromises)
 }

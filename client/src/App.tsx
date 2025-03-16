@@ -6,39 +6,28 @@ function App() {
   const [data, setData] = useState<null | DirItem[]>(null)
 
 
-  async function fetchDirItems(path: string = "") {
-    const res = await fetch("/api" + encodeURIComponent(path))
+  async function fetchDirItems(path: string) {
+    const apiPath = "/api" + path
+    console.log("apiPath", apiPath)
+    const res = await fetch(apiPath)
     const json = await res.json()
     console.log(json)
     setData(json)
   }
 
-  function handleClick(item: DirItem) {
-    if (item.type === "dir") {
-      fetchDirItems(item.publicPath)
-    } else if (item.type === "file") {
-    } else {
-      throw new Error("UNEXPECTED ITEM TYPE")
-    }
-  }
-
-  useEffect(() => {
-    fetchDirItems()
-  }, [])
+  useEffect(() => { fetchDirItems(window.location.pathname) }, [])
 
   return (
     <>
       <h1>File Navigator</h1>
-      <ul style={{ display: 'flex', flexDirection: 'column', alignItems: "flex-start" }}>
+      <ul style={{ display: 'flex', flexDirection: 'column', alignItems: "flex-start", width: "100%" }}>
         {data && data.map(item => {
           if (item.type === "dir") return <li
             key={item.itemName}
-            className={"clickable"}
-            onClick={() => handleClick(item)}
           >
-            <a href="#">{item.itemName}</a>
+            <a href={encodeURIComponent(item.publicPath)} onClick={() => { }}>{item.itemName}</a>
           </li>
-          if (item.type === "file") return <img loading="lazy" src={"/api" + item.publicPath} />
+          if (item.type === "file") return <img style={{ maxWidth: "100%" }} src={"/api/" + encodeURIComponent(item.publicPath)} />
         }
         )}
       </ul>
