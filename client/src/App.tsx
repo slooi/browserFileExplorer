@@ -13,15 +13,10 @@ function App() {
     setData(json)
   }
 
-  async function fetchFile(download: string) {
-    window.open("api?path=" + encodeURIComponent(download), "_blank")
-  }
-
   function handleClick(item: DirItem) {
     if (item.type === "dir") {
       fetchDirItems(item.fullPath)
     } else if (item.type === "file") {
-      fetchFile(item.fullPath)
     } else {
       throw new Error("UNEXPECTED ITEM TYPE")
     }
