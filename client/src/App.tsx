@@ -7,7 +7,7 @@ function App() {
 
 
   async function fetchDirItems(path: string = "") {
-    const res = await fetch("/api?path=" + encodeURIComponent(path))
+    const res = await fetch("/api" + encodeURIComponent(path))
     const json = await res.json()
     console.log(json)
     setData(json)
@@ -15,7 +15,7 @@ function App() {
 
   function handleClick(item: DirItem) {
     if (item.type === "dir") {
-      fetchDirItems(item.fullPath)
+      fetchDirItems(item.publicPath)
     } else if (item.type === "file") {
     } else {
       throw new Error("UNEXPECTED ITEM TYPE")
