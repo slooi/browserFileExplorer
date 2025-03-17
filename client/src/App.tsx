@@ -44,23 +44,25 @@ function App() {
       </div>
 
       {/* FILES */}
-      {
-        files && files.map(file => (
-          <img src={"/api/" + encodeURIComponent(file.publicPath)}
-            style={{ width: "100%" }}
-            onLoad={(e) => {
-              const img = e.target as HTMLImageElement;
-              const parent = img.parentElement
-              if (parent === null) throw new Error("ERROR PARENT NULL")
-              img.style.width = `${parent.clientWidth}px`; // Set width to current 100% width in pixels
-            }}
-            onClick={(e) => {
-              const img = e.target as HTMLImageElement
-              if (img.nextElementSibling) window.scrollBy(0, img.nextElementSibling?.getBoundingClientRect().top)
-            }}
-          />
-        ))
-      }
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        {
+          files && files.map(file => (
+            <img src={"/api/" + encodeURIComponent(file.publicPath)}
+              style={{ width: "100%" }}
+              onLoad={(e) => {
+                const img = e.target as HTMLImageElement;
+                const parent = img.parentElement
+                if (parent === null) throw new Error("ERROR PARENT NULL")
+                img.style.width = `${parent.clientWidth}px`; // Set width to current 100% width in pixels
+              }}
+              onClick={(e) => {
+                const img = e.target as HTMLImageElement
+                if (img.nextElementSibling) window.scrollBy(0, img.nextElementSibling?.getBoundingClientRect().top)
+              }}
+            />
+          ))
+        }
+      </div>
     </>
   )
 }
