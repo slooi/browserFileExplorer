@@ -5,6 +5,7 @@ import { DirItem } from './types'
 function App() {
   const [data, setData] = useState<null | DirItem[]>(null)
 
+  useEffect(() => { fetchDirItems(window.location.pathname) }, []) // encodeURIComponent  ???
 
   async function fetchDirItems(path: string) {
     const apiPath = "/api" + path
@@ -21,10 +22,12 @@ function App() {
     return dir || "/"
   }
 
-  useEffect(() => { fetchDirItems(window.location.pathname) }, []) // encodeURIComponent  ???
+  const files = data?.filter(item => item.type === "file")
+  const dirs = data?.filter(item => item.type === "dir")
 
   return (
     <>
+      {/* HEADER */}
       <div style={{ display: "flex", alignItems: "center" }}>
         <h1>File Navigator</h1>
         <div style={{ margin: "0 1rem" }}>
@@ -33,21 +36,29 @@ function App() {
           </ul>
         </div>
       </div>
-      <ul style={{ display: 'flex', flexDirection: 'column', alignItems: "flex-start", width: "100%" }}>
-        {data && data.map(item => {
-          if (item.type === "dir") return <li
-            key={item.itemName}
-          >
-            <a href={encodeURIComponent(item.publicPath)}>
-              {item.dirPreview &&
-                <div>
-                  <img src={"/api/" + encodeURIComponent(item.dirPreview)} width="300px" />
-                </div>
-                || item.itemName
-              }
-            </a>
-          </li>
-          if (item.type === "file") return <img src={"/api/" + encodeURIComponent(item.publicPath)}
+
+      {/* FOLDERS */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(25rem,auto))" }}>
+        {
+          dirs && dirs.map(dir => (
+            <div>
+              <a href={encodeURIComponent(dir.publicPath)}>
+                {dir.dirPreview && <img src={"/api/" + encodeURIComponent(dir.dirPreview)} style={{ width: "100%" }} />}
+                <p
+                  className='dir-title'
+                  title={dir.itemName} // Tooltip on hover
+                >
+                  {dir.itemName}
+                </p>
+              </a>
+            </div>
+          ))}
+      </div>
+
+      {/* FILES */}
+      {
+        files && files.map(file => (
+          <img src={"/api/" + encodeURIComponent(file.publicPath)}
             style={{ width: "100%" }}
             onLoad={(e) => {
               const img = e.target as HTMLImageElement;
@@ -60,9 +71,8 @@ function App() {
               if (img.nextElementSibling) window.scrollBy(0, img.nextElementSibling?.getBoundingClientRect().top)
             }}
           />
-        }
-        )}
-      </ul>
+        ))
+      }
     </>
   )
 }

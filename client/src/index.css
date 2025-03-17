@@ -13,6 +13,20 @@ html {
   color: white;
 }
 
+/* 
+.dir-title {
+  background-color: pink;
+  overflow: hidden;
+  max-height: 2.5rem;
+}
+
+.dir-title:hover {
+  max-height: none;
+  overflow: visible;
+
+  position: relative;
+} */
+
 /* :root,
 html,
 body,
