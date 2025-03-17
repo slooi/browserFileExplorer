@@ -47,7 +47,12 @@ function App() {
               const parent = img.parentElement
               if (parent === null) throw new Error("ERROR PARENT NULL")
               img.style.width = `${parent.clientWidth}px`; // Set width to current 100% width in pixels
-            }} />
+            }}
+            onClick={(e) => {
+              const img = e.target as HTMLImageElement
+              if (img.nextElementSibling) window.scrollBy(0, img.nextElementSibling?.getBoundingClientRect().top)
+            }}
+          />
         }
         )}
       </ul>
