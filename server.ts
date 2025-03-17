@@ -3,6 +3,7 @@ import fs from "fs/promises"
 import { DirItem } from "./client/src/types"
 import dotenv from "dotenv"
 import { pathHelper } from "./pathHelper"
+import path from "path"
 
 const PORT = 7005
 dotenv.config()
@@ -12,17 +13,13 @@ const app = express()
 /* 
 NOTES
 - Express automatically decodes :queryPath  Because of this, do NOT use decodeURIComponent. It will cause ERRORS
-- /api/ MUST be sent. Not /api%2F   Because of this, publicPath must NOT have a "/" in the beginning
-
-RULES:
-- paths coming in are stripped of their trailing "/" if they have any. Make sure to add "/" back in if need. (Stripping is default, instead of adding "/" as some paths are files not folders)
-
+- /api/ MUST be sent. Not /api%2F   Because of this, the publicPath we send to the client must NOT have a "/" in the beginning as the client will call fetch("/api/"+encodeURIComponent(publicPath)). The "/api/" must be sent as express :queryPath is only equals to the right hand side of "/api/"
 */
 
 const DEFAULT_PATH = (() => {
 	if (process.env.DEFAULT_PATH) return pathHelper.setTrailingSlash(process.env.DEFAULT_PATH).replace(/\\/g, "/")
 	throw new Error("\t\t\t!!! YOU MUST SET A DEFAULT_PATH VARIABLE IN THE .ENV FILE !!!")
-})()
+})()	// Make DEFAULT_PATH always end with a /
 
 
 
@@ -33,18 +30,19 @@ app.use("/", (req, res, next) => {
 	next()
 })
 
-import path from "path"
 app.get("/favicon.ico", (req, res) => { res.sendStatus(404) })
 
 app.get("/api/:queryPath(*)", async (req, res) => {
 	/* 
 		- The leading "/" is NOT included in the queryPath
 		NOTES:
-		/api/  			->	queryPath === ""
-		/api/pixiv 		->	queryPath === "pixiv"
+		/api/  					->	queryPath === ""
+		/api/pixiv 				->	queryPath === "pixiv"
+		/api/pixiv/file.png		-> 	queryPath === "pixiv/file.png	"
 	*/
 
 	const queryPath = req.params.queryPath
+	// make sure absolutePath has no "/" at the end. This path could be a file or a folder
 	const absolutePath = path.join(DEFAULT_PATH, queryPath).replace(/\\/g, "/").replace(/\/$/, "")
 
 	try {
