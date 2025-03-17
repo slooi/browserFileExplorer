@@ -50,7 +50,7 @@ app.get("/api/:queryPath(*)", async (req, res) => {
 		if (pathStats.isDirectory()) {
 			// If path user is requesting for is a DIRECTORY
 			const dirItems = await getDirItems(absolutePath)
-			console.log("SENDING DIRECTORY ITEMS:\n", dirItems)
+			// console.log("SENDING DIRECTORY ITEMS:\n", dirItems)
 			res.json(dirItems)
 		} else if (pathStats.isFile()) {
 			// If path user is requesting for is a FILE
@@ -64,28 +64,47 @@ app.get("/api/:queryPath(*)", async (req, res) => {
 	}
 })
 
-async function getDirItems(dirAbsolutePath: string) {
+async function getDirItems(dirAbsolutePath: string): Promise<DirItem[]> {
 	const dirEntries = await fs.readdir(dirAbsolutePath, { withFileTypes: true })
 
 	return Promise.all(dirEntries.map(async entry => {
 		const itemFullPath = dirAbsolutePath + "/" + entry.name
+		let dirPreview: null | string = null
 		try {
 			let type: "file" | "dir";
 			if (entry.isFile()) {
 				type = "file";
 			} else if (entry.isDirectory()) {
 				type = "dir";
+				dirPreview = await getDirPreview(itemFullPath)
 			} else {
 				throw new Error("MY ERROR: NOT A FILE OR DIR")
 			}
 			const publicPath = itemFullPath.replace(DEFAULT_PATH, "")
-			return { itemName: entry.name, publicPath, type } as DirItem
+			return { itemName: entry.name, publicPath, type, dirPreview }
 		} catch (err) {
 			console.warn(itemFullPath)
 			throw new Error("MY ERROR" + `${err}`)
 			// return null 
 		}
 	}))//.then(results => results.filter(Boolean))
+}
+
+async function getDirPreview(dirAbsolutePath: string) {
+	const dirEntries = await fs.readdir(dirAbsolutePath, { withFileTypes: true })
+	for (let i = 0; i < dirEntries.length; i++) {
+
+		// const publicPreviewPath = path.join(dirAbsolutePath, dirEntries[0].name).replace(/\\/g, "/").replace(DEFAULT_PATH, "")
+		// console.log("		!!!		", path.join(dirAbsolutePath, dirEntries[0].name).replace(/\\/g, "/"))
+		// console.log("		!!!	publicPreviewPath	", publicPreviewPath)
+		if (dirEntries[0].isFile()) {
+			const publicPreviewPath = path.join(dirAbsolutePath, dirEntries[0].name).replace(/\\/g, "/").replace(DEFAULT_PATH, "")
+			// console.log("		!!!		", path.join(dirAbsolutePath, dirEntries[0].name).replace(/\\/g, "/"))
+			console.log("		!!!	publicPreviewPath	", publicPreviewPath)
+			return publicPreviewPath
+		}
+	}
+	return null
 }
 
 app.listen(PORT, () => { console.log("LISTENING ON PORT " + PORT) })

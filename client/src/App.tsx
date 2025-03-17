@@ -38,7 +38,14 @@ function App() {
           if (item.type === "dir") return <li
             key={item.itemName}
           >
-            <a href={encodeURIComponent(item.publicPath)} onClick={() => { }}>{item.itemName}</a>
+            {item.dirPreview &&
+              <div>
+                <img src={"/api/" + encodeURIComponent(item.dirPreview)} width="300px" />
+              </div>
+              ||
+              <a href={encodeURIComponent(item.publicPath)} onClick={() => { }}>item.itemName
+              </a>
+            }
           </li>
           if (item.type === "file") return <img src={"/api/" + encodeURIComponent(item.publicPath)}
             style={{ width: "100%" }}
