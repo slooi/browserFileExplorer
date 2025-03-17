@@ -13,6 +13,21 @@ html {
   color: white;
 }
 
+
+.dir-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(25rem, auto));
+}
+
+
+@media all and (max-width: 768px) {
+  .dir-grid {
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    gap: 0.5rem;
+    /* Smaller gap on mobile */
+  }
+}
+
 /* 
 .dir-title {
   background-color: pink;

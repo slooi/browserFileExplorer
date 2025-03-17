@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import { DirItem } from './types'
+import DirCard from './DirCard'
 
 function App() {
   const [data, setData] = useState<null | DirItem[]>(null)
@@ -38,21 +39,8 @@ function App() {
       </div>
 
       {/* FOLDERS */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(25rem,auto))" }}>
-        {
-          dirs && dirs.map(dir => (
-            <div>
-              <a href={encodeURIComponent(dir.publicPath)}>
-                {dir.dirPreview && <img src={"/api/" + encodeURIComponent(dir.dirPreview)} style={{ width: "100%" }} />}
-                <p
-                  className='dir-title'
-                  title={dir.itemName} // Tooltip on hover
-                >
-                  {dir.itemName}
-                </p>
-              </a>
-            </div>
-          ))}
+      <div className='dir-grid'>
+        {dirs && dirs.map((dir, index) => <DirCard key={index} dir={dir} />)}
       </div>
 
       {/* FILES */}
