@@ -30,7 +30,7 @@ function App() {
     <>
       {/* HEADER */}
       <div style={{ display: "flex", alignItems: "center" }}>
-        <h1>File Navigator</h1>
+        <h1 onClick={() => window.location.href = getParentDirectory()}>File Navigator</h1>
         <div style={{ margin: "0 1rem" }}>
           <ul>
             <li><h2><a href={getParentDirectory()}>../</a></h2></li>
@@ -57,6 +57,12 @@ function App() {
             />
           ))
         }
+      </div>
+
+      <div style={{ height: "10rem", backgroundColor: "black" }}>
+        <a href={getParentDirectory()}>
+          <button className='button' style={{ width: "100%" }}><h2>../</h2></button>
+        </a>
       </div>
     </>
   )
