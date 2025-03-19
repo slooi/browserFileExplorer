@@ -51,18 +51,33 @@ function App() {
       <div
         style={{ display: "flex", flexDirection: "column" }}
         onClick={(e) => {
-          console.log(e.target)
+          const targetElement = e.target as HTMLElement
+          const tapProportion = e.clientX / targetElement.getBoundingClientRect().width
+          console.log(tapProportion)
           const img = e.target as HTMLImageElement
 
           if (img.parentElement) {
-            const elements = [...img.parentElement.children]
-            for (let i = 0; i < elements.length; i++) {
-              const distanceFromTopOfScreen = elements[i].getBoundingClientRect().top
-              // console.log(distanceFromTopOfScreen)
-              console.log("distanceFromTopOfScreen", distanceFromTopOfScreen)
-              if (distanceFromTopOfScreen > 5) {
-                window.scrollBy(0, distanceFromTopOfScreen + 2)
-                return
+            if (tapProportion > 0.5) {
+              const elements = [...img.parentElement.children]
+              for (let i = 0; i < elements.length; i++) {
+                const distanceFromTopOfScreen = elements[i].getBoundingClientRect().top
+                if (distanceFromTopOfScreen > 5) {
+                  window.scrollBy(0, distanceFromTopOfScreen + 2)
+                  return
+                }
+              }
+            } else {
+              const elements = [...img.parentElement.children]
+              for (let i = 0; i < elements.length; i++) {
+                const targetElement = elements[i]
+                let distanceFromTopOfScreen = targetElement.getBoundingClientRect().top
+                if (distanceFromTopOfScreen > -5) {
+                  if (targetElement.previousElementSibling) {
+                    distanceFromTopOfScreen = targetElement.previousElementSibling.getBoundingClientRect().top
+                    window.scrollBy(0, distanceFromTopOfScreen + 2)
+                    return
+                  }
+                }
               }
             }
           }
