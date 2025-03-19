@@ -19,8 +19,6 @@ html {
 .dir-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(25rem, auto));
-  /* gap: 1rem; */
-  /* column-gap: 5rem; */
 }
 
 .dir-title {
