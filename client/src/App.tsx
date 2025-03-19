@@ -61,7 +61,7 @@ function App() {
               // console.log(distanceFromTopOfScreen)
               console.log("distanceFromTopOfScreen", distanceFromTopOfScreen)
               if (distanceFromTopOfScreen > 5) {
-                window.scrollBy(0, distanceFromTopOfScreen)
+                window.scrollBy(0, distanceFromTopOfScreen + 2)
                 return
               }
             }
