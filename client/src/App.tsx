@@ -9,7 +9,7 @@ function App() {
   useEffect(() => { fetchDirItems(window.location.pathname) }, []) // encodeURIComponent  ???
 
   async function fetchDirItems(path: string) {
-    const apiPath = "/api" + path
+    const apiPath = "/api/" + path.replace(/^\/|^\%2F/, "")
     console.log("apiPath", apiPath)
     const res = await fetch(apiPath)
     const json = await res.json()
@@ -23,8 +23,8 @@ function App() {
     return dir || "/"
   }
 
-  const files = data?.filter(item => item.type === "file")
-  const dirs = data?.filter(item => item.type === "dir")
+  const files = data && data.filter(item => item.type === "file")
+  const dirs = data && data.filter(item => item.type === "dir")
 
   return (
     <>
@@ -43,18 +43,13 @@ function App() {
         {dirs && dirs.map((dir, index) => <DirCard key={index} dir={dir} />)}
       </div>
 
+      <h2>Files</h2>
       {/* FILES */}
       <div style={{ display: "flex", flexDirection: "column" }}>
         {
           files && files.map(file => (
             <img src={"/api/" + encodeURIComponent(file.publicPath)}
-              style={{ width: "100%" }}
-              onLoad={(e) => {
-                const img = e.target as HTMLImageElement;
-                const parent = img.parentElement
-                if (parent === null) throw new Error("ERROR PARENT NULL")
-                img.style.width = `${parent.clientWidth}px`; // Set width to current 100% width in pixels
-              }}
+              className='file'
               onClick={(e) => {
                 const img = e.target as HTMLImageElement
                 if (img.nextElementSibling) window.scrollBy(0, img.nextElementSibling?.getBoundingClientRect().top)

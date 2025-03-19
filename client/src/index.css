@@ -19,49 +19,17 @@ html {
   grid-template-columns: repeat(auto-fit, minmax(25rem, auto));
 }
 
+.file {
+  width: 70rem;
+}
 
 @media all and (max-width: 768px) {
   .dir-grid {
     grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
-    gap: 0.5rem;
     /* Smaller gap on mobile */
   }
+
+  .file {
+    width: 100%;
+  }
 }
-
-/* 
-.dir-title {
-  background-color: pink;
-  overflow: hidden;
-  max-height: 2.5rem;
-}
-
-.dir-title:hover {
-  max-height: none;
-  overflow: visible;
-
-  position: relative;
-} */
-
-/* :root,
-html,
-body,
-#root {
-  width: 100%;
-  height: 100%;
-  background-color: yellow;
-} */
-
-/* .clickable {
-  color: rgb(0, 0, 83);
-  display: block;
-  width: fit-content;
-  background-color: yellow;
-  border-bottom: 1px solid transparent;
-}
-
-.clickable:hover {
-  cursor: pointer;
-  color: rgb(50, 50, 255);
-  border-bottom: 1px solid rgb(50, 50, 255);
-  display: block;
-} */
