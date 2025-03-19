@@ -55,11 +55,9 @@ app.get("/api/:queryPath(*)", async (req, res) => {
 	let absolutePath = path.join(DEFAULT_PATH, queryPath).replace(/\\/g, "/") // This path could be a file or a folder
 
 	try {
-		console.log("ayayaya")
 		console.log("absolutePath", absolutePath)
 		const pathStats = await fs.stat(absolutePath)
 
-		console.log(" !@# ayayaya")
 		if (pathStats.isDirectory()) {
 			absolutePath = pathHelper.setTrailingSlash(absolutePath) //%2F could cause issues?
 			// If path user is requesting for is a DIRECTORY
@@ -81,7 +79,6 @@ app.get("/api/:queryPath(*)", async (req, res) => {
 				return
 			}
 			console.trace()
-			console.log(" 		!!!!!!!!!!@@@@@@@@@@@@@@@@@@@@@@@@@@!!!!!!!!	")
 		}
 		res.status(400).json({ error: `${err}` })
 		throw err
@@ -101,7 +98,6 @@ async function getDirItems(dirAbsolutePath: string): Promise<DirItem[]> {
 		}
 		throw err
 	}
-	console.log("dirAbsolutePath", dirAbsolutePath)
 	const maxNameLength = Math.max(...dirEntries.map(entry => entry.name.length));
 
 	dirEntries.forEach(entry => {
@@ -161,15 +157,9 @@ async function getDirPreview(dirAbsolutePath: string) {
 		throw err
 	}
 	for (let i = 0; i < dirEntries.length; i++) {
-
 		const entry = dirEntries[i]
-		// const publicPreviewPath = path.join(dirAbsolutePath, entry.name).replace(/\\/g, "/").replace(DEFAULT_PATH, "")
-		// console.log("		!!!		", path.join(dirAbsolutePath, entry.name).replace(/\\/g, "/"))
-		// console.log("		!!!	publicPreviewPath	", publicPreviewPath)
 		if (entry.isFile()) {
 			const publicPreviewPath = path.join(dirAbsolutePath, entry.name).replace(/\\/g, "/").replace(DEFAULT_PATH, "")
-			// console.log("		!!!		", path.join(dirAbsolutePath, entry.name).replace(/\\/g, "/"))
-			console.log("		!!!	publicPreviewPath	", publicPreviewPath)
 			return publicPreviewPath
 		}
 	}
