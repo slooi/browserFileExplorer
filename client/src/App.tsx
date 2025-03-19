@@ -63,9 +63,10 @@ function App() {
       </div>
 
       <div style={{ height: "10rem", backgroundColor: "black" }}>
-        <a href={getParentDirectory()}>
-          <button className='button' style={{ width: "100%" }}><h2>../</h2></button>
-        </a>
+        {/* <a > */}
+        <button className='button' style={{ width: "100%" }} onClick={() => window.location.href = getParentDirectory()}><h2>../</h2></button>
+        <button className='button' style={{ width: "100%" }} onClick={() => window.scrollTo(0, 0)}><h2>up</h2></button>
+        {/* </a> */}
       </div>
     </>
   )
