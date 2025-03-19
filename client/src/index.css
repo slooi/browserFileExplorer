@@ -7,17 +7,28 @@ body,
   border: 0;
   box-sizing: border-box;
   list-style-type: none;
+  font-family: sans-serif;
 }
 
 html {
   background-color: black;
-  color: white;
+  color: #d9d9d9;
 }
 
 
 .dir-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(25rem, auto));
+  /* gap: 1rem; */
+  /* column-gap: 5rem; */
+}
+
+.dir-title {
+  overflow-y: hidden;
+  max-height: 2.5rem;
+  /* background-color: #404040; */
+  margin: 2px;
+  /* border: 1px solid rgb(94, 94, 94); */
 }
 
 .file {
@@ -34,10 +45,9 @@ html {
   cursor: pointer;
 }
 
-@media all and (max-width: 768px) {
+@media all and (max-width: 780px) {
   .dir-grid {
     grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
-    /* Smaller gap on mobile */
   }
 
   .file {

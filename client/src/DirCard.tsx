@@ -11,7 +11,8 @@ export default function DirCard({ dir }: { dir: DirItem }) {
 			onMouseLeave={() => original && setMouseHover(false)}
 		>
 			<a href={encodeURIComponent(dir.publicPath)}>
-				{dir.dirPreview && <img src={"/api/" + encodeURIComponent(dir.dirPreview)} style={{ width: "100%" }} />}
+				{/* display:block on image remove small gapbelow it */}
+				{dir.dirPreview && <img src={"/api/" + encodeURIComponent(dir.dirPreview)} style={{ display: "block", width: "100%" }} />}
 				<p
 					className='dir-title'
 					title={dir.itemName} // Tooltip on hover
