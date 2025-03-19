@@ -48,15 +48,30 @@ function App() {
 
       <h2>Files</h2>
       {/* FILES */}
-      <div style={{ display: "flex", flexDirection: "column" }}>
+      <div
+        style={{ display: "flex", flexDirection: "column" }}
+        onClick={(e) => {
+          console.log(e.target)
+          const img = e.target as HTMLImageElement
+
+          if (img.parentElement) {
+            const elements = [...img.parentElement.children]
+            for (let i = 0; i < elements.length; i++) {
+              const distanceFromTopOfScreen = elements[i].getBoundingClientRect().top
+              // console.log(distanceFromTopOfScreen)
+              console.log("distanceFromTopOfScreen", distanceFromTopOfScreen)
+              if (distanceFromTopOfScreen > 5) {
+                window.scrollBy(0, distanceFromTopOfScreen)
+                return
+              }
+            }
+          }
+        }}
+      >
         {
           files && files.map(file => (
             <img src={"/api/" + encodeURIComponent(file.publicPath)}
               className='file'
-              onClick={(e) => {
-                const img = e.target as HTMLImageElement
-                if (img.nextElementSibling) window.scrollBy(0, img.nextElementSibling?.getBoundingClientRect().top)
-              }}
             />
           ))
         }
