@@ -23,19 +23,22 @@ function App() {
     return dir || "/"
   }
 
+  const getNameOfDir = () => decodeURIComponent(window.location.pathname.split(/\/|\%2F/g).filter(Boolean).pop() || "")
+
   const files = data && data.filter(item => item.type === "file")
   const dirs = data && data.filter(item => item.type === "dir")
 
   return (
     <>
       {/* HEADER */}
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <h1 onClick={() => window.location.href = getParentDirectory()}>File Navigator</h1>
-        <div style={{ margin: "0 1rem" }}>
-          <ul>
+      <div>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <h1 onClick={() => window.location.href = getParentDirectory()}>File Navigator</h1>
+          <ul style={{ margin: "0 1rem" }}>
             <li><h2><a href={getParentDirectory()}>../</a></h2></li>
           </ul>
         </div>
+        <h3 >{getNameOfDir()}</h3>
       </div>
 
       {/* FOLDERS */}
