@@ -18,7 +18,8 @@ html {
 
 .dir-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(25rem, auto));
+  grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
+  column-gap: 0.5rem;
 }
 
 .dir-title {
@@ -46,6 +47,7 @@ html {
 @media all and (max-width: 780px) {
   .dir-grid {
     grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    column-gap: 0.25rem;
   }
 
   .file {
