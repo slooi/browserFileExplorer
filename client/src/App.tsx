@@ -51,7 +51,10 @@ function App() {
       <div
         style={{ display: "flex", flexDirection: "column" }}
         onClick={(e) => {
-          const targetElement = e.target as HTMLElement
+          let targetElement = e.target as HTMLElement
+          if (!(targetElement.nodeName === "IMG")) return
+          targetElement = targetElement as HTMLImageElement
+
           const tapProportion = e.clientX / targetElement.getBoundingClientRect().width
           console.log(tapProportion)
           const img = e.target as HTMLImageElement
