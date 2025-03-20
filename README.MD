@@ -13,4 +13,4 @@
 
 1. `cd` into client and run `pnpm run dev` to start vite client server
 2. `cd` into root/server directory and run `pnpm run dev` to start express server
-3. Visit `localhost:7006` to open file explorer
+3. Visit `localhost:7006` to open file explorer (`IP_ADDRESS_OF_YOUR_MACHINE:7006` also works)
