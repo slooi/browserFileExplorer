@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon server.ts"
+    "dev": "nodemon server.ts",
+    "all": "concurrently \"cd client && pnpm run dev\" \"pnpm run dev\""
   },
   "keywords": [],
   "author": "",
@@ -16,5 +17,8 @@
     "express": "^4.21.2",
     "nodemon": "^3.1.9",
     "ts-node": "^10.9.2"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
   }
 }

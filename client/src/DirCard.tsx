@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { DirItem } from "./types";
+import { Link } from "react-router-dom";
+import { pathHelper } from "./pathHelper";
 
 
 export default function DirCard({ dir }: { dir: DirItem }) {
@@ -10,7 +12,7 @@ export default function DirCard({ dir }: { dir: DirItem }) {
 			onMouseEnter={() => original && setMouseHover(true)}
 			onMouseLeave={() => original && setMouseHover(false)}
 		>
-			<a href={encodeURIComponent(dir.publicPath)}>
+			<Link to={pathHelper.setLeadingSlash(encodeURIComponent(dir.publicPath).replace(/%2F/g, "/"))} onClick={() => console.log("CLICKED", dir.publicPath)}>
 				{/* display:block on image remove small gapbelow it */}
 				{dir.dirPreview && <img src={"/api/" + encodeURIComponent(dir.dirPreview)} style={{ display: "block", width: "100%" }} />}
 				<p
@@ -19,7 +21,9 @@ export default function DirCard({ dir }: { dir: DirItem }) {
 				>
 					{dir.itemName}
 				</p>
-			</a>
+			</Link>
+			{/* <a href={encodeURIComponent()}>
+			</a> */}
 		</div>
 	)
 
