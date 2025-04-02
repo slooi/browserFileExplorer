@@ -23,11 +23,13 @@ html {
 }
 
 .dir-title {
-  overflow-y: hidden;
-  max-height: 2.5rem;
-  /* background-color: #404040; */
-  margin: 2px;
-  /* border: 1px solid rgb(94, 94, 94); */
+  --max-lines: 2;
+  --line-height: 1.1;
+  max-height: calc(var(--max-lines)*1em*var(--line-height));
+  line-height: var(--line-height);
+  overflow: hidden;
+
+  margin-bottom: 0.2rem;
 }
 
 .file {
