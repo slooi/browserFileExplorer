@@ -17,6 +17,25 @@ html {
 }
 
 
+/* NEW DEFAULTS */
+input {
+  background: #444;
+  border: 1px solid #999;
+}
+
+button {
+  background-color: #777;
+  border-radius: 0.25rem;
+  border: 1px solid #999;
+  font-size: 1.25rem;
+}
+
+button:hover {
+  background-color: #AAA;
+  cursor: pointer;
+}
+
+/* MAIN CODE */
 .dir-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
@@ -39,23 +58,7 @@ html {
   width: 70rem;
 }
 
-input {
-  background: #444;
-  border: 1px solid #999;
-}
-
-button {
-  background-color: #777;
-  border-radius: 0.25rem;
-  border: 1px solid #999;
-  font-size: 1.25rem;
-}
-
-button:hover {
-  background-color: #AAA;
-  cursor: pointer;
-}
-
+/* MEDIA QUERIES */
 @media all and (max-width: 780px) {
   .dir-grid {
     grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
