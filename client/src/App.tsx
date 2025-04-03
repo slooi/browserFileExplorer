@@ -31,27 +31,49 @@ function App() {
   return (
     <>
       {/* HEADER */}
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <div>
-          {/* HEADER LEFT  */}
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <h1 onClick={() => window.location.href = getParentDirectory()}>File Navigator</h1>
-            <ul style={{ margin: "0 1rem" }}>
-              <li><h2><a href={getParentDirectory()}>../</a></h2></li>
-            </ul>
-          </div>
-          <h3>{getNameOfDir()}</h3>
+      <div style={{ display: "grid", gap: "1rem", gridTemplateColumns: "auto 1fr auto", marginBottom: "0.5rem" }}>
+
+        {/* HEADER LEFT  */}
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <h1 onClick={() => window.location.href = getParentDirectory()}>File Navigator</h1>
+          <h2 style={{ marginLeft: "1rem" }}><a href={getParentDirectory()}>../</a></h2>
         </div>
-        <div style={{ alignItems: "center" }}>
-          {/* HEADER RIGHT  */}
-          <button onClick={() => window.scrollTo(0, 999999999)} className='button' style={{ width: "10rem" }}><h3>down</h3></button>
-        </div>
-      </div>
+
+        {/* HEADER RIGHT  */}
+        <form onSubmit={
+          e => {
+            e.preventDefault()
+            const formData = new FormData(e.currentTarget)
+            console.log('formData.get("title")', formData.get("title"))
+            const title = formData.get("title")
+            if (typeof title === "string") {
+              fetch("/api/dl", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ title })
+              }).then(res => console.log(res)).catch(err => alert(err))
+            } else {
+
+            }
+          }
+        }
+          style={{ display: "flex", width: "100%" }}
+        >
+          <input type="text" name="title" style={{ height: "100%", width: "100%" }} autoComplete='off' />
+          <button>submit</button>
+        </form>
+
+        <button onClick={() => window.scrollTo(0, 999999999)} style={{ width: "10rem" }}>down</button>
+      </div >
+      <h3>{getNameOfDir()}</h3>
 
       {/* FOLDERS */}
-      <div className='dir-grid'>
-        {dirs && dirs.map((dir, index) => <DirCard key={index} dir={dir} />)}
-      </div>
+      < div className='dir-grid' >
+        {dirs && dirs.map((dir, index) => <DirCard key={index} dir={dir} />)
+        }
+      </div >
 
       <h2>Files</h2>
       {/* FILES */}
@@ -104,8 +126,8 @@ function App() {
 
       <div style={{ height: "10rem", backgroundColor: "black" }}>
         {/* <a > */}
-        <button className='button' style={{ width: "100%" }} onClick={() => window.location.href = getParentDirectory()}><h2>../</h2></button>
-        <button className='button' style={{ width: "100%" }} onClick={() => window.scrollTo(0, 0)}><h2>up</h2></button>
+        <button style={{ width: "100%", height: "2rem" }} onClick={() => window.location.href = getParentDirectory()}>../</button>
+        <button style={{ width: "100%", height: "2rem" }} onClick={() => window.scrollTo(0, 0)}>up</button>
         {/* </a> */}
       </div>
     </>

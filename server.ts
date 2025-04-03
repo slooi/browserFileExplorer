@@ -42,6 +42,11 @@ app.use("/", (req, res, next) => {
 	next()
 })
 
+app.post("/api/dl/", (req, res) => {
+	console.log("POST /api/dl hit")
+	res.status(200)
+})
+
 app.get("/favicon.ico", (req, res) => { res.sendStatus(404) })
 
 app.get("/api/:queryPath(*)", async (req, res) => {
