@@ -95,7 +95,7 @@ async function getDirItems(dirAbsolutePath: string): Promise<DirItem[]> {
 		);
 	});
 
-	return await Promise.all(dirEntries.filter(entry => !entry.isSymbolicLink()).map(async (entry): Promise<DirItem> => {
+	const datedDirItems = await Promise.all(dirEntries.filter(entry => !entry.isSymbolicLink()).map(async (entry): Promise<DirItem & { time: Date | null }> => {
 		const itemFullPath = dirAbsolutePath + entry.name
 		const publicPath = itemFullPath.replace(DEFAULT_PATH, "")
 
@@ -104,7 +104,8 @@ async function getDirItems(dirAbsolutePath: string): Promise<DirItem[]> {
 				itemName: entry.name,
 				publicPath,
 				type: "dir",
-				dirPreview: await getDirPreview(itemFullPath)
+				dirPreview: await getDirPreview(itemFullPath),
+				time: (await fs.stat(itemFullPath)).mtime
 			}
 		}
 		if (entry.isFile()) {
@@ -112,11 +113,27 @@ async function getDirItems(dirAbsolutePath: string): Promise<DirItem[]> {
 				itemName: entry.name,
 				publicPath,
 				type: "file",
-				dirPreview: null
+				dirPreview: null,
+				time: null
 			}
 		}
 		throw new Error("MY ERROR: Not a file or dir or symbolic link")
 	}))
+
+	const sortedDirItems = datedDirItems.sort((a, b) => {
+		if (a.time === null && b.time === null) {
+			return 0; // Keep original order if both times are null
+		} else if (a.time === null) {
+			return 1; // Move `a` after `b` (null times go last)
+		} else if (b.time === null) {
+			return -1; // Move `b` after `a` (null times go last)
+		} else {
+			return a.time.getTime() - b.time.getTime(); // Move later downloaded to end of list
+		}
+		// Order: files, folders([oldest,old,new,newest])
+	});
+
+	return sortedDirItems.map(({ time, ...item }) => item)
 }
 
 async function getDirPreview(dirAbsolutePath: string) {
