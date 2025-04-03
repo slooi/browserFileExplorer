@@ -6,6 +6,7 @@ import dotenv from "dotenv"
 import { pathHelper } from "./pathHelper"
 import path from "path"
 import { Logger } from "./Logger"
+import { exec } from "child_process"
 
 const PORT = 7005
 dotenv.config()
@@ -32,11 +33,15 @@ const DEFAULT_PATH = (() => {
 	if (process.env.DEFAULT_PATH) return pathHelper.setTrailingSlash(process.env.DEFAULT_PATH).replace(/\\/g, "/")
 	throw new Error("\t\t\t!!! YOU MUST SET A DEFAULT_PATH VARIABLE IN THE .ENV FILE !!!")
 })()	// Make DEFAULT_PATH always end with a /
-
+const DL_PATH = (() => {
+	if (process.env.DL_PATH) return pathHelper.setTrailingSlash(process.env.DL_PATH).replace(/\\/g, "/")
+	throw new Error("\t\t\t!!! YOU MUST SET A DL_PATH VARIABLE IN THE .ENV FILE !!!")
+})()	// Make DEFAULT_PATH always end with a /
 
 
 console.log("DEFAULT_PATH", DEFAULT_PATH)
 
+app.use(express.json());
 app.use("/", (req, res, next) => {
 	console.log("path hit:\t", decodeURIComponent(req.path))
 	next()
@@ -44,7 +49,28 @@ app.use("/", (req, res, next) => {
 
 app.post("/api/dl/", (req, res) => {
 	console.log("POST /api/dl hit")
-	res.status(200)
+
+	const { title } = req.body;
+	if (!title) {
+		res.status(400).json({ success: false, message: "Title is required" });
+		return
+	}
+
+	const command = `gallery-dl "${title}"`;
+	const cwd = DL_PATH; //!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#
+
+	exec(command, { cwd }, (error, stdout, stderr) => {
+		if (error) {
+			console.error(`Error: ${error.message}`);
+			res.status(500).json({ success: false, message: error.message });
+			return
+		}
+		if (stderr) {
+			console.error(`stderr: ${stderr}`);
+		}
+		console.log(`stdout: ${stdout}`);
+		res.json({ success: true, stdout, stderr }).status(200);
+	});
 })
 
 app.get("/favicon.ico", (req, res) => { res.sendStatus(404) })
