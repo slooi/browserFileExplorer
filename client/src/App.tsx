@@ -35,7 +35,7 @@ function App() {
 
         {/* HEADER LEFT  */}
         <div style={{ display: "flex", alignItems: "center" }}>
-          <h1 onClick={() => window.location.href = getParentDirectory()}>File Navigator</h1>
+          <h1 onClick={() => window.location.href = getParentDirectory()} style={{ cursor: "pointer" }}>File Navigator</h1>
           <h2 style={{ marginLeft: "1rem" }}><a href={getParentDirectory()}>../</a></h2>
         </div>
 
