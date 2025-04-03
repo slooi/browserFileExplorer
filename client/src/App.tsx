@@ -31,14 +31,21 @@ function App() {
   return (
     <>
       {/* HEADER */}
-      <div>
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <h1 onClick={() => window.location.href = getParentDirectory()}>File Navigator</h1>
-          <ul style={{ margin: "0 1rem" }}>
-            <li><h2><a href={getParentDirectory()}>../</a></h2></li>
-          </ul>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <div>
+          {/* HEADER LEFT  */}
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <h1 onClick={() => window.location.href = getParentDirectory()}>File Navigator</h1>
+            <ul style={{ margin: "0 1rem" }}>
+              <li><h2><a href={getParentDirectory()}>../</a></h2></li>
+            </ul>
+          </div>
+          <h3>{getNameOfDir()}</h3>
         </div>
-        <h3 >{getNameOfDir()}</h3>
+        <div style={{ alignItems: "center" }}>
+          {/* HEADER RIGHT  */}
+          <button onClick={() => window.scrollTo(0, 999999999)} className='button' style={{ width: "10rem" }}><h3>down</h3></button>
+        </div>
       </div>
 
       {/* FOLDERS */}

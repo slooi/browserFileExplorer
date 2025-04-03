@@ -30,6 +30,8 @@ html {
   overflow: hidden;
 
   margin-bottom: 0.2rem;
+  text-align: center;
+  padding: 0 0.5rem;
 }
 
 .file {
@@ -39,6 +41,7 @@ html {
 .button {
   background-color: #777;
   border-radius: 0.5rem;
+  height: 2rem;
 }
 
 .button:hover {
