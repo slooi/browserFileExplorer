@@ -51,12 +51,13 @@ app.post("/api/dl/", (req, res) => {
 	console.log("POST /api/dl hit")
 
 	const { title } = req.body;
+	const parsedTitle = decodeURIComponent(title)
 	if (!title) {
 		res.status(400).json({ success: false, message: "Title is required" });
 		return
 	}
 
-	const command = `gallery-dl "${title}"`;
+	const command = `gallery-dl "${parsedTitle}"`;
 	const cwd = DL_PATH; //!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#
 
 	exec(command, { cwd }, (error, stdout, stderr) => {
